@@ -1,6 +1,7 @@
 
 #include <vector>
 #include <map>
+#include <numeric>
 
 #include "nothing.hpp"
 
@@ -45,34 +46,18 @@ void run(std::vector<IndexT> const & A_rows, std::vector<IndexT> const & A_cols,
   //
   // Stage 1: Compute pattern for B
   //
-  IndexT row_start = 0;
-  for (std::size_t row = 0; row < N; ++row)
-  {
-    IndexT row_stop  = A_rows[row+1];
-
-    for (IndexT nnz_index = row_start; nnz_index < row_stop; ++nnz_index)
-      B_rows[A_cols[nnz_index]] += 1;
-
-    row_start = row_stop;
-  }
+  std::for_each(A_cols.begin(), A_cols.end(),
+                [&B_rows](IndexT col) { ++B_rows[col+1]; });
 
   // Bring row-start array in place using exclusive-scan:
-  IndexT offset = 0;
-  for (std::size_t row = 0; row < N; ++row)
-  {
-    IndexT tmp = B_rows[row];
-    B_rows[row] = offset;
-    offset += tmp;
-  }
-  B_rows[N] = offset;
-
+  std::partial_sum(B_rows.begin(), B_rows.end(), B_rows.begin());
 
   //
   // Stage 2: Fill with data
   //
   std::vector<IndexT> B_offsets(B_rows); // index of first unwritten element per row
 
-  row_start = A_rows[0];
+  IndexT row_start = A_rows[0];
   for (std::size_t row = 0; row < N; ++row)
   {
     IndexT row_stop  = A_rows[row+1];
