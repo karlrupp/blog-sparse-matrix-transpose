@@ -38,7 +38,7 @@ void run(std::vector<IndexT> const & A_rows, std::vector<IndexT> const & A_cols,
 {
   B_cols.resize(A_cols.size());
   B_values.resize(A_values.size()); // note: initialization with zero not strictly required
-  B_rows.resize(A_rows.size());     // note: initialization with zero not strictly required
+  B_rows = std::vector<IndexT>(A_rows.size(), 0);
 
   std::size_t N = A_rows.size() - 1;
 
