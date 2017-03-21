@@ -9,6 +9,23 @@ https://www.karlrupp.net/2016/02/sparse-matrix-transposition-datastructure-perfo
 Assuming that Boost is installed on the system, issue e.g.
  $> g++ main.cpp nothing.cpp -I. -O3 -DNDEBUG -o transpose
 
+To build using CMake:
+
+~~~sh
+mkdir build
+cd build
+cmake ..
+~~~
+
+then
+
+`make transpose`
+
+to build the executable, or
+
+`make benchmark`
+
+to build and run
 
 ## Run
 
